@@ -1,21 +1,21 @@
-,kills,deaths,killingSprees,visionScore,goldEarned,neutralMinionsKilled,summonerName,baitPings,championName,enemyMissingPings,win,totalMinionsKilled,CS
-6,10,9,2,6,11064,104,FrozenFire2018,0,Nunu,0,False,26,130
-6,12,13,1,25,14887,115,FrozenFire2018,0,Warwick,5,False,36,151
-6,8,7,4,21,14044,148,FrozenFire2018,0,Warwick,10,False,38,186
-0,13,11,5,12,16982,5,FrozenFire2018,6,Illaoi,3,True,252,257
-6,10,0,1,16,8177,81,FrozenFire2018,1,Warwick,1,True,15,96
-6,16,6,3,18,13525,120,FrozenFire2018,1,Warwick,4,True,48,168
-6,5,8,1,15,9409,108,FrozenFire2018,6,Warwick,1,False,30,138
-1,9,6,2,17,11954,147,FrozenFire2018,0,Warwick,3,True,23,170
-1,11,13,2,12,13899,8,FrozenFire2018,0,Zoe,14,False,150,158
-1,13,6,4,15,12759,119,FrozenFire2018,0,Warwick,2,False,22,141
-1,7,9,2,12,10974,120,FrozenFire2018,0,Warwick,6,True,9,129
-1,8,5,2,16,8860,85,FrozenFire2018,0,Warwick,3,True,16,101
-6,10,13,2,13,12183,94,FrozenFire2018,0,Warwick,2,False,37,131
-6,0,0,0,0,653,4,FrozenFire2018,0,Warwick,0,True,0,4
-6,11,7,2,17,13028,95,FrozenFire2018,1,Warwick,7,True,32,127
-6,11,9,4,12,12900,118,FrozenFire2018,0,Warwick,4,True,18,136
-6,13,12,3,20,12959,106,FrozenFire2018,0,Warwick,5,False,20,126
-1,1,6,0,6,6009,100,FrozenFire2018,0,Warwick,1,False,0,100
-6,2,6,1,9,6258,80,FrozenFire2018,1,Warwick,2,False,18,98
-1,7,6,2,10,6598,56,FrozenFire2018,0,Warwick,6,False,8,64
+gameStartTimestamp,kills,deaths,killingSprees,visionScore,goldEarned,neutralMinionsKilled,summonerName,baitPings,championName,enemyMissingPings,win,totalMinionsKilled,role,Creep Score,gameMode
+2023-07-09 21:08:02.537,7,7,2,11,11781,103,FrozenFire2018,5,Warwick,2,False,43,NONE,146,CLASSIC
+2023-07-09 20:28:21.951,10,8,2,23,15553,131,FrozenFire2018,0,Warwick,9,True,51,NONE,182,CLASSIC
+2023-07-09 17:24:34.449,5,6,1,6,5606,68,FrozenFire2018,4,Warwick,7,False,0,SUPPORT,68,CLASSIC
+2023-07-09 14:52:15.866,10,9,2,6,11064,104,FrozenFire2018,0,Nunu,0,False,26,NONE,130,CLASSIC
+2023-07-09 14:06:06.503,12,13,1,25,14887,115,FrozenFire2018,0,Warwick,5,False,36,SUPPORT,151,CLASSIC
+2023-07-09 13:15:57.183,8,7,4,21,14044,148,FrozenFire2018,0,Warwick,10,False,38,NONE,186,CLASSIC
+2023-07-06 20:33:18.118,13,11,5,12,16982,5,FrozenFire2018,6,Illaoi,3,True,252,NONE,257,CLASSIC
+2023-07-06 20:04:10.300,10,0,1,16,8177,81,FrozenFire2018,1,Warwick,1,True,15,SUPPORT,96,CLASSIC
+2023-07-06 19:31:06.603,16,6,3,18,13525,120,FrozenFire2018,1,Warwick,4,True,48,NONE,168,CLASSIC
+2023-07-06 19:00:34.811,5,8,1,15,9409,108,FrozenFire2018,6,Warwick,1,False,30,NONE,138,CLASSIC
+2023-07-06 16:47:18.809,9,6,2,17,11954,147,FrozenFire2018,0,Warwick,3,True,23,NONE,170,CLASSIC
+2023-07-06 16:12:54.065,11,13,2,12,13899,8,FrozenFire2018,0,Zoe,14,False,150,DUO,158,CLASSIC
+2023-07-05 21:12:35.966,13,6,4,15,12759,119,FrozenFire2018,0,Warwick,2,False,22,NONE,141,CLASSIC
+2023-07-05 20:43:00.907,7,9,2,12,10974,120,FrozenFire2018,0,Warwick,6,True,9,NONE,129,CLASSIC
+2023-07-05 20:13:03.829,8,5,2,16,8860,85,FrozenFire2018,0,Warwick,3,True,16,NONE,101,CLASSIC
+2023-07-05 19:39:04.477,10,13,2,13,12183,94,FrozenFire2018,0,Warwick,2,False,37,NONE,131,CLASSIC
+2023-07-05 19:27:42.898,0,0,0,0,653,4,FrozenFire2018,0,Warwick,0,True,0,SUPPORT,4,CLASSIC
+2023-07-05 17:21:59.478,11,7,2,17,13028,95,FrozenFire2018,1,Warwick,7,True,32,NONE,127,CLASSIC
+2023-07-05 16:47:18.538,11,9,4,12,12900,118,FrozenFire2018,0,Warwick,4,True,18,NONE,136,CLASSIC
+2023-07-05 15:59:26.143,13,12,3,20,12959,106,FrozenFire2018,0,Warwick,5,False,20,NONE,126,CLASSIC
