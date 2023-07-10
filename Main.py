@@ -4,13 +4,16 @@ from os import path
 import riotwatcher
 from riotwatcher import LolWatcher, ApiError
 
+z = 0
 i = 0
 q = 0
+
 lol_watcher = LolWatcher("RGAPI-5d6748ad-35c4-4c35-a05c-54dfbe074297")
 region = "euw1"
 userName = "FrozenFire2018"
 summoner = lol_watcher.summoner.by_name(region, userName)
 puuid = summoner["puuid"]
+userList = ['FrozenFire2018', 'IkuTurso', 'snizkabiz', 'Fractal14', 'NecroAura']
 
 if path.isfile('gameList.npy') == False:
     file = open('gameList.npy', 'x')
@@ -31,6 +34,7 @@ if len(matchList) == 0:
 
 np.save( 'gameList' ,np.concatenate((matchList, previousMatchList), axis = 0))
 
+
 while i < len(matchList):
     try:
         if i == 0:
@@ -44,25 +48,27 @@ while i < len(matchList):
         print("Error on match " + str(i + 1))
         print(e)
     i+= 1
-    
-output = gameInfo[["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled", "role"]].copy()
-output["Creep Score"] = gameInfo["neutralMinionsKilled"] + gameInfo["totalMinionsKilled"]
-outputMask = output["summonerName"] == userName
-output = output[outputMask]
-matchInfo["Index"] = range(len(matchInfo))
-matchInfo.set_index("Index", inplace = True)
-output["Index"] = range(len(output))
-output.set_index("Index", inplace = True)
-output = pd.concat([output, matchInfo[["gameStartTimestamp", "gameMode","queueId"]]], axis = 1)
-output["gameStartTimestamp"] = pd.to_datetime(output["gameStartTimestamp"], unit = 'ms')
-output.set_index("gameStartTimestamp", inplace = True)
 
-if path.getsize("output.csv") != 0:
-    print('entered')
-    currentCSV = pd.read_csv("output.csv")
-    currentCSV["gameStartTimestamp"] = currentCSV["gameStartTimestamp"].astype("datetime64[ns]")
-    currentCSV.set_index("gameStartTimestamp", inplace = True)
-    output = pd.concat([output, currentCSV], join = 'inner')
+for user in userList:    
+    output = gameInfo[["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled", "role"]].copy()
+    output["Creep Score"] = gameInfo["neutralMinionsKilled"] + gameInfo["totalMinionsKilled"]
+    outputMask = output["summonerName"] == user
+    output = output[outputMask]
+    matchInfo["Index"] = range(len(matchInfo))
+    matchInfo.set_index("Index", inplace = True)
+    output["Index"] = range(len(output))
+    output.set_index("Index", inplace = True)
+    output = pd.concat([output, matchInfo[["gameStartTimestamp", "gameMode","queueId"]]], axis = 1)
+    output["gameStartTimestamp"] = pd.to_datetime(output["gameStartTimestamp"], unit = 'ms')
+    output.set_index("gameStartTimestamp", inplace = True)
 
-output.sort_index(ascending = False, inplace = True)
-output.to_csv("output.csv")
+    if path.getsize("output.csv") != 0:
+        print('entered')
+        currentCSV = pd.read_csv(user + "output.csv")
+        currentCSV["gameStartTimestamp"] = currentCSV["gameStartTimestamp"].astype("datetime64[ns]")
+        currentCSV.set_index("gameStartTimestamp", inplace = True)
+        output = pd.concat([output, currentCSV], join = 'inner')
+
+    output.sort_index(ascending = False, inplace = True)
+    output.to_csv(user + "output.csv")
+    z+= 1
