@@ -34,7 +34,6 @@ if len(matchList) == 0:
 
 np.save( 'gameList' ,np.concatenate((matchList, previousMatchList), axis = 0))
 
-
 while i < len(matchList):
     try:
         if i == 0:
@@ -68,13 +67,11 @@ for user in userList:
     
     if path.isfile(user + "output.csv") != False:
         if path.getsize(user + "output.csv") != 0:
-            print('entered')
             currentCSV = pd.read_csv(user + "output.csv")
             currentCSV["gameStartTimestamp"] = currentCSV["gameStartTimestamp"].astype("datetime64[ns]")
             currentCSV.set_index("gameStartTimestamp", inplace = True)
             output = pd.concat([output, currentCSV], join = 'inner')
             output.sort_index(ascending = False, inplace = True)
 
-    
     output.to_csv(user + "output.csv")
     z+= 1
