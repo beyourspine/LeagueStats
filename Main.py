@@ -49,26 +49,32 @@ while i < len(matchList):
         print(e)
     i+= 1
 
-for user in userList:    
+temp = pd.DataFrame(np.repeat(matchInfo.values, 10, axis = 0))
+temp.columns = matchInfo.columns
+matchInfo = temp
+matchInfo["Index"] = range(len(matchInfo))
+matchInfo.set_index("Index", inplace = True)
+
+for user in userList:   
     output = gameInfo[["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled", "role"]].copy()
     output["Creep Score"] = gameInfo["neutralMinionsKilled"] + gameInfo["totalMinionsKilled"]
-    outputMask = output["summonerName"] == user
-    output = output[outputMask]
-    matchInfo["Index"] = range(len(matchInfo))
-    matchInfo.set_index("Index", inplace = True)
     output["Index"] = range(len(output))
     output.set_index("Index", inplace = True)
     output = pd.concat([output, matchInfo[["gameStartTimestamp", "gameMode","queueId"]]], axis = 1)
     output["gameStartTimestamp"] = pd.to_datetime(output["gameStartTimestamp"], unit = 'ms')
     output.set_index("gameStartTimestamp", inplace = True)
+    outputMask = output["summonerName"] == user
+    output = output[outputMask]
+    
+    if path.isfile(user + "output.csv") != False:
+        if path.getsize(user + "output.csv") != 0:
+            print('entered')
+            currentCSV = pd.read_csv(user + "output.csv")
+            currentCSV["gameStartTimestamp"] = currentCSV["gameStartTimestamp"].astype("datetime64[ns]")
+            currentCSV.set_index("gameStartTimestamp", inplace = True)
+            output = pd.concat([output, currentCSV], join = 'inner')
+            output.sort_index(ascending = False, inplace = True)
 
-    if path.getsize("output.csv") != 0:
-        print('entered')
-        currentCSV = pd.read_csv(user + "output.csv")
-        currentCSV["gameStartTimestamp"] = currentCSV["gameStartTimestamp"].astype("datetime64[ns]")
-        currentCSV.set_index("gameStartTimestamp", inplace = True)
-        output = pd.concat([output, currentCSV], join = 'inner')
-
-    output.sort_index(ascending = False, inplace = True)
+    
     output.to_csv(user + "output.csv")
     z+= 1
