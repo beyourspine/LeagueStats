@@ -8,12 +8,14 @@ z = 0
 i = 0
 q = 0
 
-lol_watcher = LolWatcher("RGAPI-5d6748ad-35c4-4c35-a05c-54dfbe074297")
+gameInfoData = ["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled", "role"]
+
+lol_watcher = LolWatcher("RGAPI-22a53102-9e03-494f-86ff-1fb8ede978de")
 region = "euw1"
 userName = "FrozenFire2018"
 summoner = lol_watcher.summoner.by_name(region, userName)
 puuid = summoner["puuid"]
-userList = ['FrozenFire2018', 'IkuTurso', 'snizkabiz', 'Fractal14', 'NecroAura']
+userList = ['FrozenFire2018', 'Fractal14', 'IkuTurso', 'snizkabiz', 'NecroAura']
 
 if path.isfile('gameList.npy') == False:
     file = open('gameList.npy', 'x')
@@ -23,10 +25,11 @@ if path.getsize("gameList.npy") == 0:
     previousMatchList = np.empty(0)
 else:
     previousMatchList = np.load('gameList.npy')
-    
-matchList = np.array(lol_watcher.match.matchlist_by_puuid(region, puuid, queue = 440))
+
+matchList = np.array(lol_watcher.match.matchlist_by_puuid(region, puuid, queue = 420, count = 20))
 matchMask = np.isin(matchList, previousMatchList, invert = True)
 matchList = matchList[matchMask]
+
 
 if len(matchList) == 0:
     print("Match List Empty")
@@ -54,12 +57,14 @@ matchInfo = temp
 matchInfo["Index"] = range(len(matchInfo))
 matchInfo.set_index("Index", inplace = True)
 
+userOutputs = [pd.DataFrame()] * len(userList)
+
 for user in userList:   
-    output = gameInfo[["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled", "role"]].copy()
+    output = gameInfo[gameInfoData].copy()
     output["Creep Score"] = gameInfo["neutralMinionsKilled"] + gameInfo["totalMinionsKilled"]
     output["Index"] = range(len(output))
     output.set_index("Index", inplace = True)
-    output = pd.concat([output, matchInfo[["gameStartTimestamp", "gameMode","queueId"]]], axis = 1)
+    output = pd.concat([output, matchInfo[["gameStartTimestamp", "queueId", "gameId"]]], axis = 1)
     output["gameStartTimestamp"] = pd.to_datetime(output["gameStartTimestamp"], unit = 'ms')
     output.set_index("gameStartTimestamp", inplace = True)
     outputMask = output["summonerName"] == user
@@ -72,6 +77,14 @@ for user in userList:
             currentCSV.set_index("gameStartTimestamp", inplace = True)
             output = pd.concat([output, currentCSV], join = 'inner')
             output.sort_index(ascending = False, inplace = True)
-
-    output.to_csv(user + "output.csv")
+    userOutputs[z] = output
     z+= 1
+
+k = 0
+
+for user in userOutputs:
+    for d in range(len(userOutputs)):
+        Mask = user["gameId"].isin(userOutputs[d]["gameId"])
+        user = user[Mask]
+    user.to_csv(userList[k] + "output.csv")
+    k+= 1
