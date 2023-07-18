@@ -19,14 +19,14 @@ summoner = lol_watcher.summoner.by_name(region, userName)
 puuid = summoner["puuid"]
 userList = ['FrozenFire2018', 'Fractal14', 'IkuTurso', 'snizkabiz', 'NecroAura']
 
-if path.isfile('gameList.npy') == False:
-    file = open('gameList.npy', 'x')
+if path.isfile(userName + 'gameList.npy') == False:
+    file = open(userName + 'gameList.npy', 'x')
     file.close
 
-if path.getsize("gameList.npy") == 0:
+if path.getsize(userName + 'gameList.npy') == 0:
     previousMatchList = np.empty(0)
 else:
-    previousMatchList = np.load('gameList.npy')
+    previousMatchList = np.load(userName + 'gameList.npy')
 
 matchList = np.array(lol_watcher.match.matchlist_by_puuid(region, puuid, queue = gamemode, count = gamecount))
 matchMask = np.isin(matchList, previousMatchList, invert = True)
@@ -37,7 +37,7 @@ if len(matchList) == 0:
     print("Match List Empty")
     exit()
 
-np.save( 'gameList' ,np.concatenate((matchList, previousMatchList), axis = 0))
+np.save( userName + 'gameList' ,np.concatenate((matchList, previousMatchList), axis = 0))
 
 while i < len(matchList):
     try:
