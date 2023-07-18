@@ -8,7 +8,9 @@ z = 0
 i = 0
 q = 0
 
-gameInfoData = ["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled", "role"]
+gameInfoColumns = ["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled"]
+gamemode = 440
+gamecount = 20
 
 lol_watcher = LolWatcher("RGAPI-22a53102-9e03-494f-86ff-1fb8ede978de")
 region = "euw1"
@@ -26,7 +28,7 @@ if path.getsize("gameList.npy") == 0:
 else:
     previousMatchList = np.load('gameList.npy')
 
-matchList = np.array(lol_watcher.match.matchlist_by_puuid(region, puuid, queue = 420, count = 20))
+matchList = np.array(lol_watcher.match.matchlist_by_puuid(region, puuid, queue = gamemode, count = gamecount))
 matchMask = np.isin(matchList, previousMatchList, invert = True)
 matchList = matchList[matchMask]
 
@@ -60,8 +62,10 @@ matchInfo.set_index("Index", inplace = True)
 userOutputs = [pd.DataFrame()] * len(userList)
 
 for user in userList:   
-    output = gameInfo[gameInfoData].copy()
+    output = gameInfo[gameInfoColumns].copy()
     output["Creep Score"] = gameInfo["neutralMinionsKilled"] + gameInfo["totalMinionsKilled"]
+    output["Game Duration"] = round(gameInfo["timePlayed"] / 60)
+    output["CS per Min"] = output["Creep Score"] / output["Game Duration"]
     output["Index"] = range(len(output))
     output.set_index("Index", inplace = True)
     output = pd.concat([output, matchInfo[["gameStartTimestamp", "queueId", "gameId"]]], axis = 1)
