@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import json
 from os import path
 import riotwatcher
 from riotwatcher import LolWatcher, ApiError
@@ -10,40 +11,40 @@ q = 0
 
 gameInfoColumns = ["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled"]
 gamemode = 440
-gamecount = 20
+gamecount = 5
 
-lol_watcher = LolWatcher("RGAPI-22a53102-9e03-494f-86ff-1fb8ede978de")
+lol_watcher = LolWatcher("RGAPI-85e300f4-a2d8-4863-824d-b53ec9f2a7be")
 region = "euw1"
 userName = "FrozenFire2018"
 summoner = lol_watcher.summoner.by_name(region, userName)
 puuid = summoner["puuid"]
 userList = ['FrozenFire2018', 'Fractal14', 'IkuTurso', 'snizkabiz', 'NecroAura']
 
-if path.isfile(userName + 'gameList.npy') == False:
-    file = open(userName + 'gameList.npy', 'x')
+if path.isfile('gameList.npy') == False:
+    file = open('gameList.npy', 'x')
     file.close
 
-if path.getsize(userName + 'gameList.npy') == 0:
+if path.getsize('gameList.npy') == 0:
     previousMatchList = np.empty(0)
 else:
-    previousMatchList = np.load(userName + 'gameList.npy')
+    previousMatchList = np.load('gameList.npy')
 
 matchList = np.array(lol_watcher.match.matchlist_by_puuid(region, puuid, queue = gamemode, count = gamecount))
 matchMask = np.isin(matchList, previousMatchList, invert = True)
 matchList = matchList[matchMask]
 
-
 if len(matchList) == 0:
     print("Match List Empty")
     exit()
 
-np.save( userName + 'gameList' ,np.concatenate((matchList, previousMatchList), axis = 0))
+np.save('gameList' ,np.concatenate((matchList, previousMatchList), axis = 0))
 
 while i < len(matchList):
     try:
         if i == 0:
             gameInfo = pd.json_normalize(lol_watcher.match.by_id(region, matchList[0])['info']['participants'])
             matchInfo = pd.json_normalize(lol_watcher.match.by_id(region, matchList[0])['info'])
+            timelineInfo = lol_watcher.match.timeline_by_match(region, matchList[0])
         else:
             gameInfo = pd.concat([gameInfo, pd.json_normalize(lol_watcher.match.by_id(region, matchList[i])['info']['participants'])])
             matchInfo = pd.concat([matchInfo, pd.json_normalize(lol_watcher.match.by_id(region, matchList[i])['info'])])
@@ -92,3 +93,6 @@ for user in userOutputs:
         user = user[Mask]
     user.to_csv(userList[k] + "output.csv")
     k+= 1
+
+print(timelineInfo['info']['frames'][0]['participantFrames']['1']['position'])
+
