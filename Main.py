@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import json
-from os import path
+import os
 import riotwatcher
 from riotwatcher import LolWatcher, ApiError
 
@@ -9,22 +9,32 @@ z = 0
 i = 0
 q = 0
 
+file = open('Key.txt', 'r')
+key = file.read()
+
 gameInfoColumns = ["kills", "deaths", "killingSprees", "visionScore", "goldEarned", "neutralMinionsKilled", "summonerName", "baitPings", "championName", "enemyMissingPings", "win", "totalMinionsKilled"]
 gamemode = 440
-gamecount = 5
+gamecount = 20
 
-lol_watcher = LolWatcher("RGAPI-85e300f4-a2d8-4863-824d-b53ec9f2a7be")
+lol_watcher = LolWatcher(key)
 region = "euw1"
 userName = "FrozenFire2018"
 summoner = lol_watcher.summoner.by_name(region, userName)
 puuid = summoner["puuid"]
 userList = ['FrozenFire2018', 'Fractal14', 'IkuTurso', 'snizkabiz', 'NecroAura']
 
-if path.isfile('gameList.npy') == False:
+file.close
+
+try: 
+    os.mkdir("OutputCSVs")
+except:
+    print("Folder Already Exists")
+
+if os.path.isfile('gameList.npy') == False:
     file = open('gameList.npy', 'x')
     file.close
 
-if path.getsize('gameList.npy') == 0:
+if os.path.getsize('gameList.npy') == 0:
     previousMatchList = np.empty(0)
 else:
     previousMatchList = np.load('gameList.npy')
@@ -75,9 +85,9 @@ for user in userList:
     outputMask = output["summonerName"] == user
     output = output[outputMask]
     
-    if path.isfile(user + "output.csv") != False:
-        if path.getsize(user + "output.csv") != 0:
-            currentCSV = pd.read_csv(user + "output.csv")
+    if os.path.isfile("OutputCSVs/" + user + "output.csv") != False:
+        if os.path.getsize("OutputCSVs/" + user + "output.csv") != 0:
+            currentCSV = pd.read_csv("OutputCSVs/" + user + "output.csv")
             currentCSV["gameStartTimestamp"] = currentCSV["gameStartTimestamp"].astype("datetime64[ns]")
             currentCSV.set_index("gameStartTimestamp", inplace = True)
             output = pd.concat([output, currentCSV], join = 'inner')
@@ -91,7 +101,7 @@ for user in userOutputs:
     for d in range(len(userOutputs)):
         Mask = user["gameId"].isin(userOutputs[d]["gameId"])
         user = user[Mask]
-    user.to_csv(userList[k] + "output.csv")
+    user.to_csv("OutputCSVs/" + userList[k] + "output.csv")
     k+= 1
 
 print(timelineInfo['info']['frames'][0]['participantFrames']['1']['position'])
